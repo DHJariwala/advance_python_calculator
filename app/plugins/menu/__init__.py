@@ -1,5 +1,6 @@
 '''This module contains the MenuCommand class.'''
 import importlib
+import logging
 import pkgutil
 from app.commands import Command
 
@@ -7,6 +8,7 @@ class MenuCommand(Command):
     '''This class is a subclass of the Command class.'''
     def execute(self):
         '''This method prints the available commands.'''
+        logging.info('Menu command called')
         plugin_package = 'app.plugins'
         command_set = self._get_command_set(plugin_package = plugin_package)
         print("Available commands:")

@@ -1,3 +1,4 @@
-'''This file is the main function to run the app'''
-if __name__ == '__main__':
-    pass
+from app import App # pragma: no cover
+
+if __name__ == '__main__': # pragma: no cover
+    APP = App().start()
