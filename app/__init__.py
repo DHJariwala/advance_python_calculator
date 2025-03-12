@@ -16,7 +16,6 @@ class App:
         load_dotenv()
         self.settings = self.load_environment_variables()
         self.settings.setdefault('ENVIRONMENT', 'PRODUCTION')
-        self.data_path = os.path.join(self.settings['CALCULATOR_HISTORY_FOLDER_PATH'], self.settings['CALCULATOR_HISTORY_FILE_NAME'])
         self.command_handler = CommandHandler()
 
     def configure_logging(self):
@@ -57,7 +56,3 @@ class App:
         print("Type 'menu' to see all available commands. Type 'exit' to exit.")
         while True:
             self.command_handler.executed_command(input(">>> ").strip())
-    
-    def get_data_handler(self):
-        '''This method loads the data handler.'''
-        return DataHandler(self.data_path)

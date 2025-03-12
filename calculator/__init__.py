@@ -41,3 +41,7 @@ class Calculator:
     def clear_history():
         '''This function clears the history of calculations.'''
         Calculations.clear_history()
+    @staticmethod
+    def save_data_to_csv():
+        '''This function saves the history of calculations to a CSV file.'''
+        
