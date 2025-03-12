@@ -52,4 +52,7 @@ class Calculator:
     @staticmethod
     def delete_at_index(index):
         Calculations.delete_at_index(index)
+    @staticmethod
+    def load_csv_data():
+        Calculations.add_csv_data()
         

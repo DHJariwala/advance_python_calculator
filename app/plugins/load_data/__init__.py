@@ -1,12 +1,11 @@
 import logging
 from app.commands import Command
+from calculator import Calculator
 
-class DeleteDataCommand(Command):
+class LoadDataCommand(Command):
     '''This class is a subclass of the Command class.'''
     def execute(self):
         '''This method deletes the local history of the user's calculation data.'''
-        logging.info('Delete data command called')
-        with open('data.txt', 'w') as file:
-            file.write('')
-        print('Data deleted.')
-        logging.info('Data deleted')
+        logging.info('Load data command called')
+        Calculator.load_csv_data()
+        logging.info('Data loaded from CSV file')
