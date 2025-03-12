@@ -8,7 +8,9 @@ iniconfig==2.0.0
 isort==5.13.2
 mccabe==0.7.0
 mocker==1.1.1
+numpy==2.2.3
 packaging==23.2
+pandas==2.2.3
 platformdirs==4.1.0
 pluggy==1.4.0
 pylint==3.0.3
@@ -17,7 +19,10 @@ pytest==8.0.0
 pytest-cov==4.1.0
 pytest-mock==3.14.0
 pytest-pylint==0.21.0
+python-dateutil==2.9.0.post0
 python-dotenv==1.0.1
+pytz==2025.1
+six==1.17.0
 tomli==2.0.1
 tomlkit==0.12.3
 typing_extensions==4.9.0
