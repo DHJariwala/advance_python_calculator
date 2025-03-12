@@ -46,4 +46,10 @@ class Calculator:
     def save_history_to_csv():
         '''This function saves the history of calculations to a CSV file.'''
         Calculations.add_calculations_data_to_csv()
+    @staticmethod
+    def print_all_calculations():
+        Calculations.print_all_calculations()
+    @staticmethod
+    def delete_at_index(index):
+        Calculations.delete_at_index(index)
         

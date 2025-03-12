@@ -46,3 +46,10 @@ class Calculations:
             cls.data_handler.add_to_csv(calc)
         cls.data_handler.save_csv_data()
         cls.clear_history()
+    @classmethod
+    def print_all_calculations(cls):
+        for index, calc in enumerate(cls.history):
+            print(f'{index+1}. {calc} = {calc.perform()}')
+    @classmethod
+    def delete_at_index(cls, index):
+        cls.history.pop(index)
