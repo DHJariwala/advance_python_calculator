@@ -16,7 +16,9 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-
+    env:
+      CALCULATOR_HISTORY_FOLDER_PATH : 'data'
+      CALCULATOR_HISTORY_FILE_NAME : 'calculator_history.csv'
     steps:
     - uses: actions/checkout@v3
     - name: Set up Python 3.10
