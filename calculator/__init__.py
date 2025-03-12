@@ -32,3 +32,8 @@ class Calculator:
     def divide(a: Decimal, b: Decimal) -> Decimal:
         '''This function divides two numbers.'''
         return Calculator._perform_operation(a, b, divide)
+    @staticmethod
+    def print_history():
+        '''This function prints the history of calculations.'''
+        for calculation in Calculations.get_history():
+            print(calculation)
