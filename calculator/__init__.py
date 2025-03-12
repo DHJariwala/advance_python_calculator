@@ -37,3 +37,7 @@ class Calculator:
         '''This function prints the history of calculations.'''
         for calculation in Calculations.get_history():
             print(calculation)
+    @staticmethod
+    def clear_history():
+        '''This function clears the history of calculations.'''
+        Calculations.clear_history()
