@@ -7,4 +7,4 @@ class GreetCommand(Command):
     def execute(self):
         '''This method greets the user.'''
         logging.info('Greet command called')
-        print("Hello World!")
+        print("Hello User!")

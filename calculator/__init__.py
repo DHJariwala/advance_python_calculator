@@ -36,8 +36,8 @@ class Calculator:
     @staticmethod
     def print_history():
         '''This function prints the history of calculations.'''
-        for calculation in Calculations.get_history():
-            print(calculation)
+        for index, calculation in enumerate(Calculations.get_history()):
+            print(f'{index+1}. {calculation} = {calculation.perform()}')
     @staticmethod
     def clear_history():
         '''This function clears the history of calculations.'''
@@ -55,4 +55,7 @@ class Calculator:
     @staticmethod
     def load_csv_data():
         Calculations.add_csv_data()
+    @staticmethod
+    def delete_csv():
+        Calculations.delete_csv()
         

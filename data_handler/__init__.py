@@ -2,12 +2,13 @@
 import os  
 import logging
 import pandas as pd
-
+from dotenv import load_dotenv
 from calculator.calculation import Calculation
 from calculator.operations import add, subtract, multiply, divide
 
 class DataHandler:
     def __init__(self):
+        load_dotenv()
         folder_path = os.environ.get('CALCULATOR_HISTORY_FOLDER_PATH')
         file_name = os.environ.get('CALCULATOR_HISTORY_FILE_NAME')
         
@@ -63,9 +64,9 @@ class DataHandler:
 
     def clear_csv_data(self):
         '''Clear all CSV data.'''
-        self.load_csv_data()
+        # self.load_csv_data()
         self.csv_data = []
-        self.save_csv_data()
+        # self.save_csv_data()
         logging.info("CSV data cleared.")
 
     def get_csv_data(self) -> list[dict]:
@@ -74,3 +75,9 @@ class DataHandler:
     def convert_to_calculation(self) -> dict:
         '''Convert the CSV data to a list of Calculation objects.'''
         return [Calculation(row['num_1'], row['num_2'], self.operations[row['operator']]) for row in self.csv_data]
+    def delete_csv_file_data(self):
+        '''Clear all CSV data.'''
+        self.load_csv_data()
+        self.csv_data = []
+        self.save_csv_data()
+        logging.info("CSV data cleared.")

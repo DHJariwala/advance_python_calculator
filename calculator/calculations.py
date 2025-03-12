@@ -40,6 +40,7 @@ class Calculations:
     @classmethod
     def add_csv_data(cls):
         cls.history += cls.data_handler.convert_to_calculation()
+        cls.data_handler.clear_csv_data()
     @classmethod
     def add_calculations_data_to_csv(cls):
         for calc in cls.history:
@@ -52,4 +53,10 @@ class Calculations:
             print(f'{index+1}. {calc} = {calc.perform()}')
     @classmethod
     def delete_at_index(cls, index):
-        cls.history.pop(index)
+        try:
+            cls.history.pop(index)
+        except IndexError:
+            print(f'Delete from improrper index : {index}')
+    @classmethod
+    def delete_csv(cls):
+        cls.data_handler.delete_csv_file_data()
