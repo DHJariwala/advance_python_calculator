@@ -1,5 +1,6 @@
-# pylint: disable=comparison-with-callable,unspecified-encoding
+# pylint: disable=comparison-with-callable,unspecified-encoding,broad-exception-raised
 '''Tests for the DataHandler class'''
+import logging
 import os
 import pytest
 import pandas as pd
@@ -7,7 +8,6 @@ from calculator.calculation import Calculation
 from calculator.operations import add, subtract, multiply, divide
 from data_handler import DataHandler
 
-# Use a dedicated test folder and file
 TEST_FOLDER_PATH = 'data'
 TEST_FILE_NAME = 'calculator_history.csv'
 
@@ -20,18 +20,27 @@ def handler_fixture(monkeypatch):
     monkeypatch.setenv('CALCULATOR_HISTORY_FOLDER_PATH', TEST_FOLDER_PATH)
     monkeypatch.setenv('CALCULATOR_HISTORY_FILE_NAME', TEST_FILE_NAME)
     handler = DataHandler()
-    # Clear in-memory data and reset file (if any) to ensure isolation.
+    # Clear in-memory data and reset file to ensure isolation.
     handler.csv_data = []
     handler.save_csv_data()
     yield handler
-    # Do not delete the file to preserve it as requested.
-    # (If needed, cleanup code can be commented or removed.)
+    # Do not delete the file here per your request.
+
+def test_missing_env_vars(monkeypatch):
+    """Test that DataHandler.__init__ raises ValueError when environment variables are missing (empty)."""
+    monkeypatch.setenv('CALCULATOR_HISTORY_FOLDER_PATH', '')
+    monkeypatch.setenv('CALCULATOR_HISTORY_FILE_NAME', '')
+    with pytest.raises(ValueError):
+        _ = DataHandler()
 
 def test_load_empty_csv(handler_fixture):
     """Test that loading an empty CSV returns an empty list."""
     handler = handler_fixture
-    handler.clear_csv_data()  # ensure file is empty
+    handler.clear_csv_data()  # ensure both in-memory and file are empty
     assert handler.get_csv_data() == []
+    # Reading the file should raise an EmptyDataError because no headers are written.
+    with pytest.raises(pd.errors.EmptyDataError):
+        pd.read_csv(handler.csv_filepath)
 
 def test_add_to_csv(handler_fixture):
     """Test adding a calculation to CSV data."""
@@ -50,20 +59,19 @@ def test_save_and_load_csv(handler_fixture):
     calc = Calculation(10, 4, subtract)
     handler.add_to_csv(calc)
     handler.save_csv_data()
-    # Create a new instance to simulate re-loading from file
+    # Create a new instance to simulate re-loading from file.
     new_handler = DataHandler()
     data = new_handler.get_csv_data()
     assert len(data) == 1
     assert data[0] == {'num_1': 10, 'num_2': 4, 'operator': 'subtract'}
 
 def test_clear_csv_data(handler_fixture):
-    """Test that clearing CSV data empties the in-memory data and the file."""
+    """Test that clearing CSV data empties the in-memory data and results in an empty file."""
     handler = handler_fixture
     handler.clear_csv_data()
     # In-memory data should be empty.
     assert handler.get_csv_data() == []
-    # Since the original save_csv_data writes an empty DataFrame from an empty list,
-    # reading the file should raise EmptyDataError (no headers written).
+    # Since clear_csv_data() does not write an empty DataFrame (and thus no headers), reading the file should raise EmptyDataError.
     with pytest.raises(pd.errors.EmptyDataError):
         pd.read_csv(handler.csv_filepath)
 
@@ -76,7 +84,7 @@ def test_convert_to_calculation(handler_fixture):
     handler.save_csv_data()
     calculations = handler.convert_to_calculation()
     assert len(calculations) == 1
-    # Check that the attributes match; we cannot call perform_operation
+    # Check that the attributes match.
     assert calculations[0].a == 8
     assert calculations[0].b == 2
     assert calculations[0].operation == divide
@@ -99,15 +107,14 @@ def test_delete_csv_data(handler_fixture):
     handler.save_csv_data()
     handler.delete_csv_file_data()
     assert handler.get_csv_data() == []
-    # Since delete_csv_file_data calls save_csv_data on an empty list,
-    # reading the file should raise EmptyDataError.
+    # Reading the file should raise EmptyDataError.
     with pytest.raises(pd.errors.EmptyDataError):
         pd.read_csv(handler.csv_filepath)
 
 def test_load_corrupted_csv(handler_fixture):
     """Test that loading a corrupted CSV returns an empty list."""
     handler = handler_fixture
-    # Write corrupted content to the file directly.
+    # Write corrupted content directly to the file.
     with open(handler.csv_filepath, 'w') as f:
         f.write("invalid,data\n,missing,fields")
     data = handler.load_csv_data()
@@ -125,4 +132,15 @@ def test_saving_to_new_folder(monkeypatch):
     handler.add_to_csv(calc)
     handler.save_csv_data()
     assert os.path.exists(handler.csv_filepath)
-    # Do not delete the file as per request.
+    # Clean up: Remove the created file and folder.
+    os.remove(handler.csv_filepath)
+    os.rmdir(new_folder)
+def test_save_csv_data_exception(handler_fixture, monkeypatch, caplog):
+    """Test that save_csv_data logs an error when an exception is raised."""
+    # Patch DataFrame.to_csv to simulate an exception.
+    def dummy_to_csv(*args, **kwargs):
+        raise Exception("Simulated save error")
+    monkeypatch.setattr(pd.DataFrame, "to_csv", dummy_to_csv)
+    with caplog.at_level(logging.ERROR):
+        handler_fixture.save_csv_data()
+    assert "Error saving data to CSV: Simulated save error" in caplog.text
