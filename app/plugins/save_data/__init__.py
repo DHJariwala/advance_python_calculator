@@ -7,4 +7,5 @@ class SaveDataCommand(Command):
     def execute(self):
         '''This method saves the local history of the user's calculation data.'''
         logging.info('Save data command called')
-        Calculator.save_data_to_csv()        
+        Calculator.save_history_to_csv()
+        logging.info('Data saved to CSV file')        

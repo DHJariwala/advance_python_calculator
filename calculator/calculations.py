@@ -2,10 +2,12 @@
 '''This document contains the Calculations class, which represents a collection of Calculation objects.'''
 from typing import List
 from calculator.calculation import Calculation
+from data_handler import DataHandler
 
 class Calculations:
     '''This class represents a collection of Calculation objects.'''
     history: List[Calculation] = []
+    data_handler = DataHandler()
 
     @classmethod
     def add_calculation(cls, calculation: Calculation) -> None:
@@ -31,3 +33,16 @@ class Calculations:
     def find_by_operation(cls, operation_name: str) -> List[Calculation]:
         '''This function returns a list of Calculation objects that match the specified operation.'''
         return [calculation for calculation in cls.history if calculation.operation.__name__ == operation_name]
+    @classmethod
+    def clear_csv_data(cls):
+        '''This function clears the CSV data.'''
+        cls.data_handler.clear_csv_data()
+    @classmethod
+    def add_csv_data(cls):
+        cls.history += cls.data_handler.convert_to_calculation()
+    @classmethod
+    def add_calculations_data_to_csv(cls):
+        for calc in cls.history:
+            cls.data_handler.add_to_csv(calc)
+        cls.data_handler.save_csv_data()
+        cls.clear_history()

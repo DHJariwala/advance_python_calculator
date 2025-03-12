@@ -15,6 +15,7 @@ class Calculator:
         '''This function performs an arithmetic operation on two numbers.'''
         calculation = Calculation.create(a, b, operation)
         Calculations.add_calculation(calculation)
+        Calculations
         return calculation.perform()
     @staticmethod
     def add(a: Decimal, b: Decimal) -> Decimal:
@@ -42,6 +43,7 @@ class Calculator:
         '''This function clears the history of calculations.'''
         Calculations.clear_history()
     @staticmethod
-    def save_data_to_csv():
+    def save_history_to_csv():
         '''This function saves the history of calculations to a CSV file.'''
+        Calculations.add_calculations_data_to_csv()
         

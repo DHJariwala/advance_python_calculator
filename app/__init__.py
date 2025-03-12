@@ -3,7 +3,6 @@ import os
 import pkgutil
 import importlib
 from app.commands import CommandHandler, Command
-from app.data_handler import DataHandler
 from dotenv import load_dotenv
 import logging
 import logging.config
