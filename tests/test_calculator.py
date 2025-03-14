@@ -1,8 +1,10 @@
 '''Tests for the Calculator class.'''
 from decimal import Decimal
+import pytest
 
 from calculator import Calculator
 from calculator.calculations import Calculations
+from calculator.statistic import CalculationStatistic
 
 # --- Arithmetic operation tests ---
 
@@ -26,17 +28,65 @@ def test_divide():
     result = Calculator.divide(Decimal(2), Decimal(2))
     assert result == Decimal(1)
 
-# --- Other Calculator methods ---
+# --- Statistic operation tests ---
+
+@pytest.fixture
+def dummy_statistic():
+    """A dummy calculation statistic object with a perform() method."""
+    class DummyStatistic:
+        '''A dummy statistic object.'''
+        def perform(self):
+            '''A dummy perform method.'''
+            return Decimal(10)
+    return DummyStatistic()
+
+def test_mean_statistic(mocker, dummy_statistic):
+    """
+    Test that Calculator.mean calls _perform_statistic_operation and returns the expected value.
+    """
+    # Patch CalculationStatistic.create to return our dummy object.
+    patch = mocker.patch.object(CalculationStatistic, "create", return_value=dummy_statistic)
+    result = Calculator.mean([Decimal("1"), Decimal("2"), Decimal("3")])
+    assert result == Decimal(10)
+    patch.assert_called_once()
+    # Additionally, you can check that the first argument of create is the list and the second is the mean function.
+    args, _ = patch.call_args
+    assert args[0] == [Decimal("1"), Decimal("2"), Decimal("3")]
+    # args[1] is the mean function imported in Calculator; no need to call it here.
+
+def test_median_statistic(mocker, dummy_statistic):
+    """
+    Test that Calculator.median calls _perform_statistic_operation and returns the expected value.
+    """
+    patch = mocker.patch.object(CalculationStatistic, "create", return_value=dummy_statistic)
+    result = Calculator.median([Decimal("4"), Decimal("5"), Decimal("6")])
+    assert result == Decimal(10)
+    patch.assert_called_once()
+    args, _ = patch.call_args
+    assert args[0] == [Decimal("4"), Decimal("5"), Decimal("6")]
+
+def test_mode_statistic(mocker, dummy_statistic):
+    """
+    Test that Calculator.mode calls _perform_statistic_operation and returns the expected value.
+    """
+    patch = mocker.patch.object(CalculationStatistic, "create", return_value=dummy_statistic)
+    result = Calculator.mode([Decimal("7"), Decimal("7"), Decimal("8")])
+    assert result == Decimal(10)
+    patch.assert_called_once()
+    args, _ = patch.call_args
+    assert args[0] == [Decimal("7"), Decimal("7"), Decimal("8")]
+
+# --- History and file operations tests ---
 
 def test_print_history(monkeypatch, capsys):
     """Test that print_history prints calculation history correctly."""
     # Create a dummy calculation with predictable output.
     class DummyCalculation:
-        '''Dummy calculation class'''
+        '''A dummy calculation object.'''
         def __str__(self):
             return "dummy_calc"
         def perform(self):
-            '''Dummy perform method'''
+            '''A dummy perform method.'''
             return Decimal(42)
     # Patch Calculations.get_history to return two dummy calculations.
     monkeypatch.setattr(Calculations, "get_history", lambda: [DummyCalculation(), DummyCalculation()])
