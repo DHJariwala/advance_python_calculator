@@ -1,1 +1,2 @@
-
+num_1,num_2,operator
+"[Decimal('1'), Decimal('2'), Decimal('3')]",0,mean
