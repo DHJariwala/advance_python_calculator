@@ -32,3 +32,15 @@ def median(a: list[Decimal]) -> Decimal:
     if n % 2 == 0:
         return (sorted_a[n//2 - 1] + sorted_a[n//2]) / 2
     return sorted_a[n//2]
+def mode(a: list[Decimal]) -> Decimal:
+    '''Calculate the mode of a list of numbers'''
+    if len(a) == 0:
+        raise ValueError("Cannot calculate the mode of an empty list")
+    counts = {}
+    for num in a:
+        counts[num] = counts.get(num, 0) + 1
+    max_count = max(counts.values())
+    mode = [num for num, count in counts.items() if count == max_count]
+    if len(mode) == 1:
+        return mode[0]
+    return mode
