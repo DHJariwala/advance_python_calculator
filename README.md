@@ -18,7 +18,7 @@ Used clean code principles for proper maintainable and scalable codebase.
 
 The application has the following functionalities (these are all **plugins**):
 - add
-  - add's two numbers
+  - add two numbers
 - subtract
   - subtract two numbers
 - multiply
