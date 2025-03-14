@@ -1,6 +1,7 @@
 '''This file contains the tests for the commands in the app/plugins directory'''
 import logging
 import os
+from decimal import Decimal
 import pytest
 from calculator import Calculator
 from app import App
@@ -11,6 +12,9 @@ from app.plugins.delete_csv import DeleteCSVCommand
 from app.plugins.delete_data import DeleteDataCommand
 from app.plugins.load_data import LoadDataCommand
 from app.plugins.clear import ClearCommand
+from app.plugins.mean import MeanCommand
+from app.plugins.median import MedianCommand
+from app.plugins.mode import ModeCommand
 
 def test_app_greet_command(monkeypatch):
     """Test that the REPL correctly handles the 'greet' command."""
@@ -356,3 +360,129 @@ def test_load_data_command(mocker, caplog):
     # Verify that both expected log messages are present.
     assert 'Load data command called' in caplog.text
     assert 'Data loaded from CSV file' in caplog.text
+
+def test_mean_command_valid(monkeypatch, capsys, faker):
+    """
+    Test that MeanCommand.execute() calculates the mean correctly
+    for a valid list of numbers.
+    """
+    # Generate a list of random integers using faker.
+    numbers = [faker.random_int(min=1, max=100) for _ in range(5)]
+    input_str = ",".join(map(str, numbers))
+    # Patch Calculator.mean to compute the mean as sum(values)/count.
+    def mean_func(decimal_list):
+        total = sum(decimal_list, Decimal(0))
+        count = Decimal(len(decimal_list))
+        return total / count
+    monkeypatch.setattr(Calculator, 'mean', mean_func)
+    # Patch input() to return our generated string.
+    monkeypatch.setattr('builtins.input', lambda prompt: input_str)
+    # Execute the command.
+    cmd = MeanCommand()
+    cmd.execute()
+    # Capture and verify output.
+    captured = capsys.readouterr()
+    expected_mean = mean_func([Decimal(str(n)) for n in numbers])
+    expected_output = f"mean({input_str}) = {expected_mean}"
+    assert expected_output in captured.out
+
+def test_mean_command_invalid(monkeypatch, capsys, faker):
+    """
+    Test that MeanCommand.execute() handles invalid input gracefully.
+    An invalid value in the comma-separated list should trigger an error.
+    """
+    # Create an input string with an invalid number.
+    invalid_input = "a," + ",".join(str(faker.random_int(min=1, max=100)) for _ in range(3))
+    monkeypatch.setattr('builtins.input', lambda prompt: invalid_input)
+    # Execute the command.
+    cmd = MeanCommand()
+    cmd.execute()
+    # Capture output and verify that an error message was printed.
+    captured = capsys.readouterr()
+    assert "Invalid operation:" in captured.out
+
+def test_median_command_valid(monkeypatch, capsys, faker):
+    """
+    Test that MedianCommand.execute() calculates the median correctly
+    for a valid list of numbers.
+    """
+    # Generate a list of random integers using faker.
+    numbers = [faker.random_int(min=1, max=100) for _ in range(5)]
+    input_str = ",".join(map(str, numbers))
+    # Define a median function for testing purposes.
+    def median_func(decimal_list):
+        sorted_list = sorted(decimal_list)
+        n = len(sorted_list)
+        if n % 2 == 1:
+            return sorted_list[n // 2]
+        return (sorted_list[n // 2 - 1] + sorted_list[n // 2]) / 2
+    # Patch Calculator.median to use our median_func.
+    monkeypatch.setattr(Calculator, 'median', median_func)
+    # Patch input() to return our generated comma-separated string.
+    monkeypatch.setattr('builtins.input', lambda prompt: input_str)
+    # Execute the command.
+    cmd = MedianCommand()
+    cmd.execute()
+    # Capture and verify output.
+    captured = capsys.readouterr()
+    expected_result = median_func([Decimal(str(n)) for n in numbers])
+    expected_output = f"Median({input_str}) = {expected_result}"
+    assert expected_output in captured.out
+
+def test_median_command_invalid(monkeypatch, capsys, faker):
+    """
+    Test that MedianCommand.execute() handles invalid input gracefully.
+    An invalid value in the comma-separated list should trigger an error.
+    """
+    # Create an input string with an invalid value.
+    invalid_input = "a," + ",".join(str(faker.random_int(min=1, max=100)) for _ in range(3))
+    monkeypatch.setattr('builtins.input', lambda prompt: invalid_input)
+    # Execute the command.
+    cmd = MedianCommand()
+    cmd.execute()
+    # Capture output and verify that an error message was printed.
+    captured = capsys.readouterr()
+    assert "Invalid operation:" in captured.out
+
+def test_mode_command_valid(monkeypatch, capsys, faker):
+    """
+    Test that ModeCommand.execute() calculates the mode correctly
+    for a valid list of numbers.
+    """
+    # Generate a duplicate value to serve as the mode.
+    mode_value = faker.random_int(min=1, max=100)
+    other1 = faker.random_int(min=1, max=100)
+    while other1 == mode_value:
+        other1 = faker.random_int(min=1, max=100)
+    other2 = faker.random_int(min=1, max=100)
+    while other2 in (mode_value, other1):
+        other2 = faker.random_int(min=1, max=100)
+    # Create a list that has mode_value repeated.
+    values = [mode_value, mode_value, other1, other2]
+    input_str = ",".join(map(str, values))
+    # Patch Calculator.mode to return a list containing the mode_value as a Decimal.
+    monkeypatch.setattr(Calculator, 'mode', lambda decimals: [Decimal(str(mode_value))])
+    # Patch input() to return our generated comma-separated string.
+    monkeypatch.setattr('builtins.input', lambda prompt: input_str)
+    # Execute the command.
+    cmd = ModeCommand()
+    cmd.execute()
+    # Capture and verify output.
+    captured = capsys.readouterr()
+    expected_output = f"mode({input_str}) = ['{str(mode_value)}']"
+    assert expected_output in captured.out
+
+def test_mode_command_invalid(monkeypatch, capsys, faker):
+    """
+    Test that ModeCommand.execute() handles invalid input gracefully.
+    An invalid value in the comma-separated list should trigger an error.
+    """
+    # Create an input string with an invalid number.
+    invalid_input = "a," + ",".join(str(faker.random_int(min=1, max=100)) for _ in range(3))
+    monkeypatch.setattr('builtins.input', lambda prompt: invalid_input)
+    # Execute the command.
+    cmd = ModeCommand()
+    cmd.execute()
+    # Capture output and verify that an error message was printed.
+    captured = capsys.readouterr()
+    assert "Invalid operation:" in captured.out
