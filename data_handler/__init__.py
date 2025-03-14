@@ -5,7 +5,7 @@ import pandas as pd
 from calculator.statistic import CalculationStatistic
 from dotenv import load_dotenv
 from calculator.calculation import Calculation
-from calculator.operations import add, mean, subtract, multiply, divide
+from calculator.operations import add, mean, median, subtract, multiply, divide
 from decimal import Decimal
 
 class DataHandler:
@@ -25,9 +25,10 @@ class DataHandler:
             'subtract': subtract,
             'multiply': multiply,
             'divide': divide,
-            'mean': mean
+            'mean': mean,
+            'median': median
         }
-        self.statistic_operations = ['mean']
+        self.statistic_operations = ['mean', 'median']
 
     def load_csv_data(self) -> list[dict]:
         '''Load CSV data from the file system.'''

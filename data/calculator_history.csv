@@ -1,3 +1,5 @@
 num_1,num_2,operator
 "[Decimal('1'), Decimal('2'), Decimal('3')]",0,mean
-1,2,add
+"[Decimal('1'), Decimal('2'), Decimal('3'), Decimal('4')]",0,median
+"[Decimal('1'), Decimal('2'), Decimal('3')]",0,median
+"[Decimal('1'), Decimal('2'), Decimal('3'), Decimal('4'), Decimal('5')]",0,median

@@ -6,7 +6,7 @@ from decimal import Decimal
 from typing import Callable
 from calculator.calculation import Calculation
 from calculator.calculations import Calculations
-from calculator.operations import add, subtract, multiply, divide, mean
+from calculator.operations import add, subtract, multiply, divide, mean, median
 from calculator.statistic import CalculationStatistic
 
 class Calculator:
@@ -44,6 +44,10 @@ class Calculator:
     def mean(a: list[Decimal]) -> Decimal:
         '''This function calculates the mean of a list of numbers.'''
         return Calculator._perform_statistic_operation(a, mean)
+    @staticmethod
+    def median(a: list[Decimal]) -> Decimal:
+        '''This function calculates the median of a list of numbers.'''
+        return Calculator._perform_statistic_operation(a, median)
     @staticmethod
     def print_history():
         '''This function prints the history of calculations.'''

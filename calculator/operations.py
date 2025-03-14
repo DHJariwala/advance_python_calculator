@@ -23,3 +23,12 @@ def mean(a: list[Decimal]) -> Decimal:
     if len(a) == 0:
         raise ValueError("Cannot calculate the mean of an empty list")
     return sum(a) / len(a)
+def median(a: list[Decimal]) -> Decimal:
+    '''Calculate the median of a list of numbers'''
+    if len(a) == 0:
+        raise ValueError("Cannot calculate the median of an empty list")
+    sorted_a = sorted(a)
+    n = len(sorted_a)
+    if n % 2 == 0:
+        return (sorted_a[n//2 - 1] + sorted_a[n//2]) / 2
+    return sorted_a[n//2]
