@@ -52,6 +52,58 @@ The application has the following functionalities (these are all **plugins**):
 - exit
   - exit's the application
 
+## Configuring the app
+
+### Clone this project
+```bash
+git clone git@github.com:DHJariwala/advance_python_calculator.git
+```
+Make sure you are in the application folder
+```bash
+cd advance_python_calculator
+```
+
+### Virtual environment
+Make the virtual environment using the following command
+```bash
+python3 -m venv venv
+```
+Activate the virtual environment on MacOS or Linux using the following command
+```bash
+source venv/bin/activate
+```
+Activate the virtual environment on Windows using the following command
+```bash
+.\venv\Scripts\activate
+```
+
+### Installing Requirements
+Install all the requirements using
+```bash
+pip install -r requirements.txt
+```
+
+### Environment variables
+make a environment variable file using the following
+```bash
+touch .env
+```
+Inside the `.env` file add the following environment variables
+```bash
+CALCULATOR_HISTORY_FOLDER_PATH = 'data'
+CALCULATOR_HISTORY_FILE_NAME = 'calculator_history.csv'
+```
+
+### Running the app
+Run the app using the following command
+```bash
+python3 main.py
+```
+If your python installation is not `python3`, maybe it's just `python`, in this case, run the following command
+```bash
+python main.py
+```
+
 ## Rubrics
 
 ### Total Points: 100
