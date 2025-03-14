@@ -52,6 +52,12 @@ The application has the following functionalities (these are all **plugins**):
 - exit
   - exit's the application
 
+## Video Link
+
+A short video of length 2:40 - [Click Here](https://youtu.be/cD7ySR3n_uM)
+A full length video of length 7:45 - [Click Here](https://youtu.be/IN-vDD18JIE)
+
+
 ## Setup Instructions
 
 ### Clone this project
@@ -137,6 +143,42 @@ Available commands:
 - clear
 ```
 
+## Environment variables code
+Load the environment varible when the app is initialized. This will load all the environment variable into the current environment.
+Used the following code in `app/__init__.py`
+```python
+from dotenv import load_dotenv
+load_dotenv()
+```
+Link to code that initializes environment variable : [Link To Code](./app/__init__.py#L15)
+
+For github actions / workflow, I have intialized the environment variables in the repo secret.
+The code for the workflow is [here](./.github/workflows/python-app.yml#L20)
+
+## Logging code
+Proper logging is maintained.
+The logging configuration can be seen [here](logging.conf)
+The logging is configured in the `App` class with `configure_logging` method. The code is [here](./app/__init__.py#L20)
+
+## LBYL and EAFP
+Look Before You Leap (LBYL) and Easier to Ask for Forgiveness than Permission (EAFP) are used in code, here are a few examples
+LBYL mainly used int the following locations
+[Operations](./calculator/operations.py)
+[Data Handler class](./data_handler/__init__.py#L34)
+
+EAFP mainly used in plugins, below are some examples:
+[add plugin](./app/plugins/add/__init__.py)
+[subtract plugin](./app/plugins/subtract/__init__.py)
+[multiply plugin](./app/plugins/multiply/__init__.py)
+[divide plugin](./app/plugins/divide/__init__.py)
+[mean plugin](./app/plugins/mean/__init__.py)
+[median plugin](./app/plugins/median/__init__.py)
+[mode plugin](./app/plugins/mode/__init__.py)
+[delete_data plugin](./app/plugins/delete_data/__init__.py)
+[clear_history plugin](./app/plugins/clear_history/__init__.py)
+[clear plugin](./app/plugins/clear/__init__.py)
+
+
 ## Design Pattern Rationale and Implementation
 - The `DataHandler` class follows the **Facade Design Pattern**, which simplifies the interaction with complex subsystems by providing a unified interface. The class consolidates multiple responsibilities such as loading, saving, clearing, and converting CSV data while maintaining a clean and organized structure. The design rationale behind this pattern is to reduce the complexity of managing calculation data and provide a single entry point for handling data operations.
 - The `Calculator` class follows the **Static Factory Pattern** and the **Command Pattern** to provide a centralized, consistent interface for performing arithmetic and statistical operations. The rationale behind using a static class is to simplify the instantiation process, allowing the user to call methods directly on the `Calculator` class without needing to create an object. This design ensures that the operations are easily accessible while maintaining a consistent and organized structure.
@@ -146,7 +188,7 @@ Available commands:
 - The `App` class follows the **Facade Pattern** and the **Plugin Pattern** to provide a centralized and extensible structure for managing the application lifecycle and dynamically loading functionality through plugins. The rationale behind this design is to simplify the complexity of initializing, configuring, and executing commands by providing a unified interface that abstracts the underlying complexity.
 - The `App` class implements a **REPL (Read-Eval-Print Loop)** in the start method to provide an interactive command-line interface for the user. 
 
-## Rubrics
+## Rubrics Checklist
 
 ### Total Points: 100
 
@@ -173,3 +215,15 @@ Available commands:
 - ✅ **README Documentation:** 5 points for comprehensive setup and usage instructions.
 - ✅ **Logging Practices:** 5 points for implementing adaptable and informative logging.
 
+## Project Submission guidelines checklist
+
+- ✅ Create a NEW repository from scratch and transfer any relevant work as you complete the assignment, **you need to show a clear history of work through your commits, or your project could be given as low as a 0 for not showing your work.**
+- ✅ Submit through a GitHub repository link containing the necessary documentation, configuration examples, and a coherent commit history.
+- ✅ You are required to write a short description and link to your implememtation of the design patterns you use.
+- ✅ You need to provide a description of how you used environment variables and link to your code to illustrate.
+- ✅ You need to explain and link to how you are using logging.
+- ✅ You need to link to and explain how you are using try/catch / exceptions to illustrate  "Look Before You Leap" (LBYL) and "Easier to Ask for Forgiveness than Permission" (EAFP)/
+- ✅ Create a 3-5 minute video demonstration of using the calculator, highlighting its key features and functionalities. Link the video to the repository readme.
+- ✅ Submit a link to your repository to Canvas.  
+- ✅ Keep your repository private while working on it, so people don't copy your work.  Make the repository public within a day of the project being due, so we can grade it.
+- ✅ **REQUIRED - YOU MUST USE GITHUB ACTIONS AND YOUR CODE MUST PASS ALL THE TESTS ON GITHUB**
