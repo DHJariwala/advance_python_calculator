@@ -2,6 +2,7 @@
 '''This document contains the Calculations class, which represents a collection of Calculation objects.'''
 from typing import List
 from calculator.calculation import Calculation
+from calculator.statistic import CalculationStatistic
 from data_handler import DataHandler
 
 class Calculations:
@@ -11,6 +12,11 @@ class Calculations:
 
     @classmethod
     def add_calculation(cls, calculation: Calculation) -> None:
+        '''This function adds a Calculation object to the collection.'''
+        cls.history.append(calculation)
+    
+    @classmethod
+    def add_statistic_calculation(cls, calculation: CalculationStatistic) -> None:
         '''This function adds a Calculation object to the collection.'''
         cls.history.append(calculation)
 
@@ -49,6 +55,7 @@ class Calculations:
         cls.clear_history()
     @classmethod
     def print_all_calculations(cls):
+        # print(cls.history)
         for index, calc in enumerate(cls.history):
             print(f'{index+1}. {calc} = {calc.perform()}')
     @classmethod

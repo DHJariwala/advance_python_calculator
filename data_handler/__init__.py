@@ -2,9 +2,11 @@
 import os  
 import logging
 import pandas as pd
+from calculator.statistic import CalculationStatistic
 from dotenv import load_dotenv
 from calculator.calculation import Calculation
-from calculator.operations import add, subtract, multiply, divide
+from calculator.operations import add, mean, subtract, multiply, divide
+from decimal import Decimal
 
 class DataHandler:
     def __init__(self):
@@ -22,22 +24,21 @@ class DataHandler:
             'add': add,
             'subtract': subtract,
             'multiply': multiply,
-            'divide': divide
+            'divide': divide,
+            'mean': mean
         }
+        self.statistic_operations = ['mean']
 
     def load_csv_data(self) -> list[dict]:
         '''Load CSV data from the file system.'''
         if os.path.exists(self.csv_filepath):
             try:
                 df = pd.read_csv(self.csv_filepath)
-                # Convert numeric fields (if necessary)
-                df['num_1'] = pd.to_numeric(df['num_1'], errors='coerce')
-                df['num_2'] = pd.to_numeric(df['num_2'], errors='coerce')
-                # Convert to list of dictionaries
+                # Do not force numeric conversion so that list data remain intact
                 data = df.to_dict(orient='records')
                 return data
             except Exception as e:
-                # logging.error(f"Error reading CSV file: {e}")
+                logging.error(f"Error reading CSV file: {e}")
                 return []
         else:
             logging.warning('CSV file not found')
@@ -45,8 +46,14 @@ class DataHandler:
 
     def add_to_csv(self, calculation):
         '''Add a calculation to the CSV data.'''
+        # If calculation.a is a list (as in CalculationStatistic), convert it to a string representation.
+        if isinstance(calculation.a, list):
+            num_1_val = repr(calculation.a)
+        else:
+            num_1_val = calculation.a
+
         to_add_data = {
-            'num_1': calculation.a,
+            'num_1': num_1_val,
             'num_2': calculation.b,
             'operator': calculation.operation.__name__,
         }
@@ -64,20 +71,42 @@ class DataHandler:
 
     def clear_csv_data(self):
         '''Clear all CSV data.'''
-        # self.load_csv_data()
         self.csv_data = []
-        # self.save_csv_data()
         logging.info("CSV data cleared.")
 
     def get_csv_data(self) -> list[dict]:
         '''Return the current CSV data.'''
         return self.csv_data
-    def convert_to_calculation(self) -> dict:
+
+    def convert_to_calculation(self) -> list:
         '''Convert the CSV data to a list of Calculation objects.'''
-        return [Calculation(row['num_1'], row['num_2'], self.operations[row['operator']]) for row in self.csv_data]
+        calculations = []
+        for row in self.csv_data:
+            operator = row['operator']
+            if operator in self.statistic_operations:
+                # For statistic operations, num_1 is stored as a string representation of a list of Decimals.
+                try:
+                    # Evaluate the string in a safe environment that only permits the Decimal constructor.
+                    a_val = eval(row['num_1'], {"__builtins__": {}}, {"Decimal": Decimal})
+                except Exception as e:
+                    logging.error(f"Error converting num_1 to list of Decimals: {e}")
+                    a_val = row['num_1']
+                calculations.append(CalculationStatistic(a_val, self.operations[operator]))
+            else:
+                # For normal calculations, try to convert num_1 and num_2 to float.
+                try:
+                    a_val = float(row['num_1'])
+                except Exception:
+                    a_val = row['num_1']
+                try:
+                    b_val = float(row['num_2'])
+                except Exception:
+                    b_val = row['num_2']
+                calculations.append(Calculation(a_val, b_val, self.operations[operator]))
+        return calculations
+
     def delete_csv_file_data(self):
         '''Clear all CSV data.'''
-        self.load_csv_data()
         self.csv_data = []
         self.save_csv_data()
         logging.info("CSV data cleared.")

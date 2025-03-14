@@ -1,52 +1,32 @@
-# IS-601 Calculator Homework Submissions
-Submitted by: Dev Hetal Jariwala
+# Advance Python Calculator
+This is an advance calculator for python that has...
 
-## Homework 3
-✅ All Pytest, Pylint and Coverage passed <br> <br>
-**Branch:** Was branch main previously <br> <br>
-Rubrics Checklist: <br>
-✅ 20 Points for (add subtract, multiply, divide) <br>
-✅ 10 Points for exception throwing and testing on divide by zero <br>
-✅ 30 points each for using static, class, and instance methods correctly <br>
-✅ 5 Points for having a calculation class that stores the arthitmentic operation in a instance property. <br>
-✅ 15 Points for having a calculation history to store calculation instances <br>
-✅ 10 Points for having the convenience methods on the calculations class to manage the history <br>
-✅ 10 Points for using parameterized test data <br>
+This project is a part of IS-601 course.
 
-## Homework 4
-✅ All Pytest, Pylint and Coverage passed <br> <br>
+## Rubrics
 
-**Branch:** hw4 <br> <br>
+### Total Points: 100
 
-Rubrics Checklist: <br>
-✅ 30 Points - Faker <br>
-✅ 30 Points - Test Data Generation <br>
-✅ 40 Points - User Input <br>
+#### ✅ Functionality (40 Points)
 
-## Homework 5
-✅ All Pytest, Pylint and Coverage passed <br> <br>
+- ✅ **Calculator Operations:** 20 points for implementing basic and statistical operations.
+- ✅ **History Management:** 10 points for effective management using Pandas.
+- ✅ **Configuration via Environment Variables:** 5 points for flexible application configuration.
+- ✅ **REPL Interface:** 5 points for a user-friendly command-line interface.
 
-**Branch:** hw-5 <br> <br>
+#### ✅ Design Patterns (20 Points)
 
-Rubrics Checklist: <br>
-- ✅ **Testing (50 Points):**
-  - ✅ Comprehensive test coverage near 100% average coverage: 50 Points <br>
+- ✅ **Implementation and Application:** 10 points for the effective use of design patterns.
+- ✅ **Documentation and Explanation:** 10 points for thorough documentation of design pattern rationale and implementation.
 
-- ✅ **Functionality (50 Points):**
-  - ✅ Implementation of command pattern and REPL: 10 Points<br>
-  - ✅ Interactive calculator commands (add, subtract, multiply, divide): 20 Points<br>
-  - ✅ Successful plugin architecture integration for dynamic command loading: 20 Points<br>
+#### ✅ Testing and Code Quality (20 Points)
 
-✅ Ensure that the functionality aligns with the requirements and demonstrates the effective use of the command pattern and plugin architecture as outlined in the instructor videos.
+- ✅ **Comprehensive Testing with Pytest:** 10 points for extensive test coverage.
+- ✅ **Code Quality and Adherence to Standards:** 10 points for clean, maintainable code.
 
-## Homework 6
-✅ All Pytest, Pylint and Coverage passed <br> <br>
+#### ✅ Version Control, Documentation, and Logging (20 Points)
 
-**Branch:** hw-6 <br> <br>
+- ✅ **Commit History:** 10 points for logical and informative commit messages.
+- ✅ **README Documentation:** 5 points for comprehensive setup and usage instructions.
+- ✅ **Logging Practices:** 5 points for implementing adaptable and informative logging.
 
-Assignment Checklist: <br>
-- ✅ Github actions setup
-- ✅ Environment variable setup
-- ✅ Logging functionality added
-
-✅ **Github actions passed**

@@ -18,3 +18,8 @@ def divide(a: Decimal, b: Decimal) -> Decimal:
     if b == 0:
         raise ValueError("Cannot divide by zero")
     return a / b
+def mean(a: list[Decimal]) -> Decimal:
+    '''Calculate the mean of a list of numbers'''
+    if len(a) == 0:
+        raise ValueError("Cannot calculate the mean of an empty list")
+    return sum(a) / len(a)

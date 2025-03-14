@@ -6,7 +6,8 @@ from decimal import Decimal
 from typing import Callable
 from calculator.calculation import Calculation
 from calculator.calculations import Calculations
-from calculator.operations import add, subtract, multiply, divide
+from calculator.operations import add, subtract, multiply, divide, mean
+from calculator.statistic import CalculationStatistic
 
 class Calculator:
     '''This class is a static class that performs arithmetic operations on two numbers.'''
@@ -16,6 +17,12 @@ class Calculator:
         calculation = Calculation.create(a, b, operation)
         Calculations.add_calculation(calculation)
         Calculations
+        return calculation.perform()
+    @staticmethod
+    def _perform_statistic_operation(a: list[Decimal], operation: Callable[[list[Decimal]], Decimal]) -> Decimal:
+        '''This function performs a statistic operation on a list of numbers.'''
+        calculation = CalculationStatistic.create(a, operation)
+        Calculations.add_statistic_calculation(calculation)
         return calculation.perform()
     @staticmethod
     def add(a: Decimal, b: Decimal) -> Decimal:
@@ -33,6 +40,10 @@ class Calculator:
     def divide(a: Decimal, b: Decimal) -> Decimal:
         '''This function divides two numbers.'''
         return Calculator._perform_operation(a, b, divide)
+    @staticmethod
+    def mean(a: list[Decimal]) -> Decimal:
+        '''This function calculates the mean of a list of numbers.'''
+        return Calculator._perform_statistic_operation(a, mean)
     @staticmethod
     def print_history():
         '''This function prints the history of calculations.'''
