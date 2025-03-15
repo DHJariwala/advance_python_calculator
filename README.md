@@ -94,7 +94,7 @@ make a environment file using the following
 ```bash
 touch .env
 ```
-Inside the `.env` file add the following environment variables
+Inside the `.env` file add the following environment variables. You can change the values as per your choice.
 ```bash
 CALCULATOR_HISTORY_FOLDER_PATH = 'data'
 CALCULATOR_HISTORY_FILE_NAME = 'calculator_history.csv'
@@ -142,8 +142,10 @@ Available commands:
 - delete_csv
 - clear
 ```
+You can write any of this commands when prompted `>>>`.
+For some plugins, it will ask for additional information. Please provide this information for it to work.
 
-## Environment variables code
+## Environment variables logic
 Load the environment varible when the app is initialized. This will load all the environment variable into the current environment.
 Used the following code in `app/__init__.py`
 ```python
@@ -155,7 +157,7 @@ Link to code that initializes environment variable : [Link To Code](./app/__init
 For github actions / workflow, I have intialized the environment variables in the repo secret.
 The code for the workflow is [here](./.github/workflows/python-app.yml#L20)
 
-## Logging code
+## Logging logic
 Proper logging is maintained.
 The logging configuration can be seen [here](logging.conf)
 The logging is configured in the `App` class with `configure_logging` method. The code is [here](./app/__init__.py#L20)
